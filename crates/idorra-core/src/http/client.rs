@@ -107,6 +107,7 @@ impl Gate {
                     id_value: tc.id_value.clone(),
                     comparison_group_id: tc.comparison_group_id,
                     protocol: tc.protocol,
+                    is_baseline: tc.is_baseline,
                 };
                 RequestOutcome::failed(&placeholder, self.include_secrets, e.to_string())
             }
@@ -279,6 +280,7 @@ mod tests {
             id_value: IdValue::Numeric(1),
             comparison_group_id: ComparisonGroupId(Uuid::nil()),
             protocol: Protocol::Rest,
+            is_baseline: true,
         }
     }
 

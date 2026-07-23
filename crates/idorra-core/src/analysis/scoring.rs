@@ -167,6 +167,7 @@ mod tests {
             id_value: IdValue::Numeric(7),
             comparison_group_id: ComparisonGroupId(Uuid::nil()),
             protocol: Protocol::Rest,
+            is_baseline: false,
             method: "GET".into(),
             url: "https://api.example.com/api/orders/7".into(),
             sent_at: Utc::now(),

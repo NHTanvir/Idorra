@@ -192,6 +192,11 @@ pub struct TestCase {
     pub session: SessionRef,
     /// The strategy that generated this case.
     pub strategy: TestStrategy,
+    /// Whether this case is the reference/baseline of its comparison group
+    /// (the resource owner for cross-session, the canonical method/location for
+    /// tampering). Scoring compares every other case against this one.
+    #[serde(default)]
+    pub is_baseline: bool,
     /// The comparison group this case participates in.
     pub comparison_group_id: ComparisonGroupId,
     /// Static extra headers merged in (from target/endpoint config).

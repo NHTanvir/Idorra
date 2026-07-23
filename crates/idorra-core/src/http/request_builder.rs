@@ -86,6 +86,7 @@ pub fn build_spec(tc: &TestCase, session: &Session) -> Result<RequestSpec> {
         id_value: tc.id_value.clone(),
         comparison_group_id: tc.comparison_group_id,
         protocol: tc.protocol,
+        is_baseline: tc.is_baseline,
     })
 }
 
@@ -145,6 +146,7 @@ mod tests {
             graphql: None,
             session: "a".into(),
             strategy: TestStrategy::IdEnumeration,
+            is_baseline: true,
             comparison_group_id: ComparisonGroupId(Uuid::nil()),
             extra_headers: BTreeMap::new(),
         }

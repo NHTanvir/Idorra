@@ -40,6 +40,8 @@ pub struct RequestSpec {
     pub comparison_group_id: ComparisonGroupId,
     /// REST vs GraphQL.
     pub protocol: Protocol,
+    /// Whether this is the reference/baseline of its comparison group.
+    pub is_baseline: bool,
 }
 
 /// A redacted, report-safe snapshot of what was (or would be) sent.
@@ -117,6 +119,8 @@ pub struct RequestOutcome {
     pub comparison_group_id: ComparisonGroupId,
     /// REST vs GraphQL.
     pub protocol: Protocol,
+    /// Whether this is the reference/baseline of its comparison group.
+    pub is_baseline: bool,
     /// Method token.
     pub method: String,
     /// Request URL.
@@ -156,6 +160,7 @@ impl RequestOutcome {
             id_value: spec.id_value.clone(),
             comparison_group_id: spec.comparison_group_id,
             protocol: spec.protocol,
+            is_baseline: spec.is_baseline,
             method: spec.method.as_str().to_string(),
             url: spec.url.clone(),
             sent_at: Utc::now(),

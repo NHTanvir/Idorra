@@ -18,6 +18,7 @@
 
 pub mod analysis;
 pub mod config;
+pub mod engine;
 pub mod error;
 pub mod finding;
 pub mod http;
@@ -28,6 +29,7 @@ pub mod session;
 pub mod testcase;
 
 pub use config::Config;
+pub use engine::{Engine, RunSummary};
 pub use error::{Error, GateError, Result};
 pub use finding::{Confidence, Finding, ReasonCode, Severity};
 pub use http::{Gate, GateConfig, Limiter};
