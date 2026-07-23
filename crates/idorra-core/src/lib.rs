@@ -18,12 +18,17 @@
 
 pub mod config;
 pub mod error;
+pub mod http;
+pub mod logging;
+pub mod outcome;
 pub mod scope;
 pub mod session;
 pub mod testcase;
 
 pub use config::Config;
 pub use error::{Error, GateError, Result};
+pub use http::{Gate, GateConfig, Limiter};
+pub use outcome::{RequestOutcome, RequestSpec};
 pub use scope::ScopeGuard;
 pub use session::SessionStore;
 pub use testcase::{HttpMethod, IdValue, ParamLocation, Protocol, TestCase, TestStrategy};
