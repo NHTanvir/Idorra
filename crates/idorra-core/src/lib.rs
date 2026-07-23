@@ -15,3 +15,9 @@
 //! `clippy.toml`).
 
 #![forbid(unsafe_code)]
+
+pub mod error;
+pub mod scope;
+
+pub use error::{Error, GateError, Result};
+pub use scope::ScopeGuard;
