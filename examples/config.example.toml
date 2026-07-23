@@ -1,0 +1,85 @@
+# idorra.example.toml — annotated reference config.
+#
+# This is the TRACKED file: scope, targets, endpoints, pacing. It must NOT
+# contain session tokens/cookies — those go in a gitignored `secrets.toml`
+# (see the bottom of this file) and are merged in at load time.
+#
+# Copy to `idorra.toml`, or run `idorra init` to scaffold both files.
+
+[general]
+# Dry-run sends nothing; it prints/logs what it WOULD send. Default is true so a
+# stray run never hits a target. Override per-run with `--live` (or `--dry-run`).
+dry_run = true
+log_dir = "./idorra-logs"       # one timestamped JSONL audit file per run
+report_dir = "./idorra-reports" # JSON + Markdown findings reports
+
+[scope]
+# The safety allowlist. Every request's host MUST match one of these patterns or
+# it is refused BEFORE any request is built. Matching:
+#   - exact:    "api.example.com"      matches only that host
+#   - wildcard: "*.example.com"        matches any sub-domain (not the apex)
+allow = ["api.example-target.com", "*.staging.example-target.com"]
+# Empty/omitted => any port. Otherwise only these ports are allowed.
+allow_ports = [443]
+
+[rate_limit]
+requests_per_second = 2.0        # conservative default; fractional ok (0.5 = 1/2s)
+burst = 2                        # token-bucket burst (keep small)
+max_concurrency = 4             # hard cap on in-flight requests
+
+[http]
+connect_timeout_secs = 10
+request_timeout_secs = 20        # a hung target can't hold a slot forever
+max_body_capture_bytes = 262144  # cap response bytes captured as evidence (256 KiB)
+# proxy = "http://127.0.0.1:8080" # optional: route through Burp/mitmproxy (still scope-checked)
+
+[analysis]
+# Added to the built-in sensitive field-name list (email/phone/token/…), never replaces it.
+sensitive_field_patterns = ["email", "phone", "ssn", "token", "address"]
+body_length_anomaly_threshold_pct = 15.0
+
+# ── A REST target ────────────────────────────────────────────────────────────
+[[target]]
+name = "orders_api"
+base_url = "https://api.example-target.com"   # host must be in scope.allow
+protocol = "rest"
+baseline_session = "session_a"                # the "resource owner" in comparisons
+
+  [[target.endpoint]]
+  name = "get_order_by_id"
+  path_template = "/api/orders/{id}"           # must contain the {id_param} placeholder
+  method = "GET"
+  id_param = "id"
+  # id sources: range (inclusive), list, or file (one id per line)
+  id_source = { kind = "range", start = 1, end = 200 }
+  # id_source = { kind = "list", values = [101, 102, "a1b2"] }
+  # id_source = { kind = "file", path = "ids.txt" }
+  param_locations = ["path", "query", "header", "json_body"]  # where to try the id
+  test_methods = ["GET", "PUT", "DELETE"]      # PUT/DELETE can MUTATE — only sent with --live
+  sessions = ["session_a", "session_b"]        # must include baseline_session
+
+# ── A GraphQL target ─────────────────────────────────────────────────────────
+[[target]]
+name = "graphql_api"
+base_url = "https://api.example-target.com"
+protocol = "graphql"
+baseline_session = "session_a"
+
+  [[target.graphql_query]]
+  name = "order_by_id"
+  query_file = "queries/order_by_id.graphql"   # relative to this config's directory
+  variable_name = "id"                          # referenced as $id in the query
+  id_source = { kind = "range", start = 1, end = 100 }
+  sessions = ["session_a", "session_b"]
+
+# ── secrets.toml (SEPARATE, GITIGNORED file) ─────────────────────────────────
+# [[session]]
+# name = "session_a"
+# description = "Low-privilege user A (resource owner / baseline)"
+# cookie = "sessionid=..."          # exactly one of cookie / bearer_token
+#
+# [[session]]
+# name = "session_b"
+# description = "Low-privilege user B (attacker perspective)"
+# bearer_token = "eyJ..."
+# headers = { "X-Csrf-Token" = "..." }   # optional extra static headers
