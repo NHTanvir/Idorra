@@ -24,12 +24,14 @@ pub mod finding;
 pub mod http;
 pub mod logging;
 pub mod outcome;
+pub mod report;
 pub mod scope;
 pub mod session;
 pub mod testcase;
 
 pub use config::Config;
 pub use engine::{Engine, RunSummary};
+pub use report::{write_reports, ReportPaths};
 pub use error::{Error, GateError, Result};
 pub use finding::{Confidence, Finding, ReasonCode, Severity};
 pub use http::{Gate, GateConfig, Limiter};
