@@ -16,8 +16,10 @@
 
 #![forbid(unsafe_code)]
 
+pub mod analysis;
 pub mod config;
 pub mod error;
+pub mod finding;
 pub mod http;
 pub mod logging;
 pub mod outcome;
@@ -27,6 +29,7 @@ pub mod testcase;
 
 pub use config::Config;
 pub use error::{Error, GateError, Result};
+pub use finding::{Confidence, Finding, ReasonCode, Severity};
 pub use http::{Gate, GateConfig, Limiter};
 pub use outcome::{RequestOutcome, RequestSpec};
 pub use scope::ScopeGuard;
