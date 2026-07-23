@@ -80,7 +80,7 @@ impl ScopeGuard {
         if host.is_empty() {
             return false;
         }
-        if self.exact.iter().any(|h| *h == host) {
+        if self.exact.contains(&host) {
             return true;
         }
         self.wildcard_suffixes

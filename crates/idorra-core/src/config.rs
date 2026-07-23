@@ -317,8 +317,11 @@ impl Config {
     pub fn validate(&self) -> Result<()> {
         let guard = self.scope_guard()?;
 
-        if !(self.rate_limit.requests_per_second > 0.0) {
-            return Err(Error::Config("rate_limit.requests_per_second must be > 0".into()));
+        let rps = self.rate_limit.requests_per_second;
+        if rps <= 0.0 || !rps.is_finite() {
+            return Err(Error::Config(
+                "rate_limit.requests_per_second must be a positive, finite number".into(),
+            ));
         }
         if self.rate_limit.max_concurrency < 1 {
             return Err(Error::Config("rate_limit.max_concurrency must be >= 1".into()));

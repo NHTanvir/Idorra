@@ -31,7 +31,7 @@ impl Limiter {
     /// `burst` is the token-bucket allowance (min 1); `max_concurrency` is the
     /// hard in-flight ceiling (min 1).
     pub fn new(requests_per_second: f64, burst: u32, max_concurrency: usize) -> Result<Self> {
-        if !(requests_per_second > 0.0) || !requests_per_second.is_finite() {
+        if requests_per_second <= 0.0 || !requests_per_second.is_finite() {
             return Err(Error::Config(format!(
                 "requests_per_second must be a positive, finite number (got {requests_per_second})"
             )));

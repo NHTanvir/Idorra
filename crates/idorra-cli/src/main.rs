@@ -33,7 +33,7 @@ async fn main() -> Result<()> {
 }
 
 fn load_config(args: &RunArgs) -> Result<Config> {
-    let secrets = args.secrets.exists().then(|| args.secrets.as_path());
+    let secrets = args.secrets.exists().then_some(args.secrets.as_path());
     Config::load(&args.config, secrets)
         .with_context(|| format!("loading config {:?}", args.config))
 }

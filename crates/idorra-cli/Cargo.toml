@@ -12,6 +12,9 @@ repository.workspace = true
 name = "idorra"
 path = "src/main.rs"
 
+[lints]
+workspace = true
+
 [dependencies]
 idorra-core = { path = "../idorra-core" }
 tokio = { workspace = true }

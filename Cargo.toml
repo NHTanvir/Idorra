@@ -22,6 +22,11 @@ thiserror = "1"
 tracing = "0.1"
 url = "2"
 
+[workspace.lints.clippy]
+# Enforce the outbound-HTTP choke point: constructing a reqwest client is denied
+# crate-wide (see clippy.toml for the method list); http/client.rs opts back in.
+disallowed_methods = "deny"
+
 [profile.release]
 lto = "thin"
 strip = true

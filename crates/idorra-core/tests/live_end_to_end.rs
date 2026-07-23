@@ -50,7 +50,7 @@ async fn handle_conn(mut sock: TcpStream) {
     for line in req.lines() {
         let lower = line.to_ascii_lowercase();
         if lower.starts_with("authorization:") || lower.starts_with("cookie:") {
-            seen = line.splitn(2, ':').nth(1).unwrap_or("").trim().replace('"', "'");
+            seen = line.split_once(':').map(|x| x.1).unwrap_or("").trim().replace('"', "'");
         }
     }
 
