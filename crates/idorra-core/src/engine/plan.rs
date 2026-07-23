@@ -62,7 +62,15 @@ fn gen_endpoint(
         }
 
         // --- Strategy: HTTP method tampering (baseline session) ---
-        if !endpoint.test_methods.is_empty() {
+        // Only when there's at least one method that differs from the baseline,
+        // otherwise the group would be a lone baseline with nothing to compare.
+        let extra_methods: Vec<HttpMethod> = endpoint
+            .test_methods
+            .iter()
+            .copied()
+            .filter(|m| *m != endpoint.method)
+            .collect();
+        if !extra_methods.is_empty() {
             let group = ComparisonGroupId::new();
             out.push(rest_case(
                 target,
@@ -75,15 +83,12 @@ fn gen_endpoint(
                 true,
                 group,
             ));
-            for method in &endpoint.test_methods {
-                if *method == endpoint.method {
-                    continue;
-                }
+            for method in extra_methods {
                 out.push(rest_case(
                     target,
                     endpoint,
                     id.clone(),
-                    *method,
+                    method,
                     ParamLocation::Path,
                     &target.baseline_session,
                     TestStrategy::MethodTampering,
