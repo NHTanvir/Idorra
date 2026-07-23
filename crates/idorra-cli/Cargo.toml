@@ -1,0 +1,22 @@
+[package]
+name = "idorra-cli"
+description = "CLI front-end for the idorra IDOR / access-control testing engine"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+# The binary is named `idorra` so the build output is `idorra.exe`, while the
+# package/crate stays `idorra-cli` (matches `cargo build -p idorra-cli`).
+[[bin]]
+name = "idorra"
+path = "src/main.rs"
+
+[dependencies]
+idorra-core = { path = "../idorra-core" }
+tokio = { workspace = true }
+serde_json = { workspace = true }
+clap = { version = "4", features = ["derive"] }
+anyhow = "1"
+tracing = { workspace = true }
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }

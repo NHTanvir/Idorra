@@ -23,3 +23,15 @@ __pycache__/
 # Build output
 dist/
 build/
+
+# Rust
+/target/
+**/*.rs.bk
+
+# idorra secrets — NEVER commit real tokens/cookies
+secrets.toml
+*.local.toml
+
+# idorra runtime output
+idorra-logs/
+idorra-reports/

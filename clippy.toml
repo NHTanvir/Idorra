@@ -1,0 +1,10 @@
+# Choke-point enforcement: constructing a reqwest client is forbidden crate-wide.
+# The one legitimate construction site (http/client.rs, inside `Gate`) opts back
+# in locally with `#[allow(clippy::disallowed_methods)]`. This gives the
+# "all outbound HTTP goes through the Gate" rule real teeth in CI, since Rust's
+# module privacy alone cannot stop a sibling module from building its own client.
+disallowed-methods = [
+    { path = "reqwest::Client::new", reason = "construct the HTTP client only inside http/client.rs Gate" },
+    { path = "reqwest::Client::builder", reason = "construct the HTTP client only inside http/client.rs Gate" },
+    { path = "reqwest::ClientBuilder::new", reason = "construct the HTTP client only inside http/client.rs Gate" },
+]
